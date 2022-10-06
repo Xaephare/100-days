@@ -12,9 +12,8 @@ def save():
     with open('data.txt', 'a') as data:
         data.write(f"{website} | {username} | {password}\n")
     website_entry.delete(0, 'end')
-    username_entry.delete(0, 'end')
-    username_entry.insert(0, "youremail@email.com")
     password_entry.delete(0, 'end')
+
 
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
