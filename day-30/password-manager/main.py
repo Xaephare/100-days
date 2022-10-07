@@ -59,6 +59,26 @@ def save():
             password_entry.delete(0, 'end')
 
 
+# ----------------------------- SEARCH -------------------------------- #
+
+
+def find_password():
+    website = website_entry.get()
+    try:
+        with open('data.json', 'r') as data_file:
+            data = json.load(data_file)
+    except FileNotFoundError:
+        messagebox.showerror(title="File Missing", message="No Data File Found")
+    else:
+        if website in data:
+            messagebox.showinfo(title=website, message=f"USERNAME: {data[website]['email']}\n"
+                                                       f"PASSWORD: {data[website]['password']}")
+        else:
+            messagebox.showwarning(title="Not Found",
+                                   message=f"No website was found under the name {website}."
+                                           f"\nCheck spelling and try again.")
+
+
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
 window.title("Password Manager")
@@ -97,5 +117,8 @@ generate_password_button.grid(column=2, row=3, sticky='EW')
 
 add_button = Button(text="Add", width=35, command=save)
 add_button.grid(column=1, row=4, columnspan=2, sticky='EW')
+
+generate_password_button = Button(text="Search", command=find_password)
+generate_password_button.grid(column=2, row=1, sticky='EW')
 
 window.mainloop()
