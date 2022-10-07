@@ -43,9 +43,18 @@ def save():
                                                     "Make sure to fill in all fields before continuing")
 
     else:
-        with open('data.json', 'w') as data:
-            json.dump(new_data, data, indent=4)
+        try:
+            with open('data.json', 'r') as data_file:
+                data = json.load(data_file)
+        except FileNotFoundError:
+            with open('data.json', 'w') as data_file:
+                json.dump(new_data, data_file, indent=4)
+        else:
+            data.update(new_data)
 
+            with open('data.json', 'w') as data_file:
+                json.dump(data, data_file, indent=4)
+        finally:
             website_entry.delete(0, 'end')
             password_entry.delete(0, 'end')
 
