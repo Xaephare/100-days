@@ -44,7 +44,7 @@ def save():
 
     else:
         with open('data.json', 'w') as data:
-            json.dump(new_data, data)
+            json.dump(new_data, data, indent=4)
 
             website_entry.delete(0, 'end')
             password_entry.delete(0, 'end')
