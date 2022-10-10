@@ -18,19 +18,32 @@ finally:
 
 current_card = {}
 
+
 def remove_from_list():
-    word_dictionary.remove(current_card)
-    to_learn_df = pd.DataFrame.from_dict(word_dictionary)
-    to_learn_df.to_csv('data/to_learn.csv', index=False)
-    new_card()
+    try:
+        word_dictionary.remove(current_card)
+    except ValueError:
+        pass
+    finally:
+        to_learn_df = pd.DataFrame.from_dict(word_dictionary)
+        to_learn_df.to_csv('data/to_learn.csv', index=False)
+        new_card()
+
+
 def new_card():
     global current_card, timer
     window.after_cancel(timer)
-    current_card = rd.choice(word_dictionary)
-    canvas.itemconfig(flash_card, image=card_front)
-    canvas.itemconfig(flash_title, text="French", fill='black')
-    canvas.itemconfig(flash_word, text=f"{current_card['French']}", fill='black')
-    timer = window.after(3000, flip_card, current_card)
+    try:
+        current_card = rd.choice(word_dictionary)
+    except IndexError:
+        canvas.itemconfig(flash_card, image=card_front)
+        canvas.itemconfig(flash_title, text="You've finished", fill='black')
+        canvas.itemconfig(flash_word, text="Well Done!", fill='black')
+    else:
+        canvas.itemconfig(flash_card, image=card_front)
+        canvas.itemconfig(flash_title, text="French", fill='black')
+        canvas.itemconfig(flash_word, text=f"{current_card['French']}", fill='black')
+        timer = window.after(3000, flip_card, current_card)
 
 
 def flip_card(old_card):
