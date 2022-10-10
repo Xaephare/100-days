@@ -1,18 +1,28 @@
 from tkinter import *
 import pandas as pd
 import random as rd
+import pandas.errors
 
 BACKGROUND_COLOR = "#B1DDC6"
 
-# --------------------------------- WORD DICTIONARY -------------------------------------
-df = pd.read_csv('data/french_words.csv')
-word_dictionary = df.to_dict(orient='records')
-
+# --------------------------------- WORD DICTIONARY ------------------------------
+try:
+    df = pd.read_csv('data/to_learn.csv')
+except FileNotFoundError:
+    df = pd.read_csv('data/french_words.csv')
+except pandas.errors.EmptyDataError:
+    df = pd.read_csv('data/french_words.csv')
+finally:
+    word_dictionary = df.to_dict(orient='records')
 # --------------------------------- NEW CARD -------------------------------------
 
 current_card = {}
 
-
+def remove_from_list():
+    word_dictionary.remove(current_card)
+    to_learn_df = pd.DataFrame.from_dict(word_dictionary)
+    to_learn_df.to_csv('data/to_learn.csv', index=False)
+    new_card()
 def new_card():
     global current_card, timer
     window.after_cancel(timer)
@@ -29,7 +39,6 @@ def flip_card(old_card):
     canvas.itemconfig(flash_word, text=f"{old_card['English']}", fill='white')
 
 
-# --------------------------------- TIMER -------------------------------------
 # --------------------------------- UI -------------------------------------
 
 window = Tk()
@@ -49,7 +58,7 @@ canvas.grid(column=0, row=0, columnspan=3)
 check_img = PhotoImage(file='./images/right.png')
 x_img = PhotoImage(file='./images/wrong.png')
 
-check_button = Button(image=check_img, highlightthickness=0, command=new_card)
+check_button = Button(image=check_img, highlightthickness=0, command=remove_from_list)
 check_button.grid(column=2, row=1)
 
 x_button = Button(image=x_img, highlightthickness=0, command=new_card)
