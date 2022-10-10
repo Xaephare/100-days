@@ -8,10 +8,14 @@ BACKGROUND_COLOR = "#B1DDC6"
 df = pd.read_csv('data/french_words.csv')
 word_dictionary = df.to_dict(orient='records')
 
-
 # --------------------------------- NEW CARD -------------------------------------
 
+current_card = {}
+
+
 def new_card():
+    global current_card, timer
+    window.after_cancel(timer)
     current_card = rd.choice(word_dictionary)
     canvas.itemconfig(flash_card, image=card_front)
     canvas.itemconfig(flash_title, text="French", fill='black')
@@ -31,6 +35,8 @@ def flip_card(old_card):
 window = Tk()
 window.title("Flash cards")
 window.config(padx=50, pady=50, bg=BACKGROUND_COLOR)
+
+timer = window.after(3000, flip_card, current_card)
 
 canvas = Canvas(width=800, height=526, bg=BACKGROUND_COLOR, highlightthickness=0)
 card_front = PhotoImage(file='./images/card_front.png')
