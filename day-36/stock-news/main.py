@@ -22,21 +22,11 @@ stock_data = stock_response.json()['Time Series (Daily)']
 data_list = [value for (key, value) in stock_data.items()]
 yesterday_data = data_list[0]
 day_before_data = data_list[1]
-print(data_list)
-print(yesterday_data)
-print(day_before_data)
+abs_difference = abs(float(yesterday_data['4. close']) - float(day_before_data['4. close']))
+percentage_diff = abs_difference / float(day_before_data['4. close']) * 100
 
-
-
-# TODO 1. - Get yesterday's closing stock price. Hint: You can perform list comprehensions on Python dictionaries. e.g. [new_value for (key, value) in dictionary.items()]
-
-# TODO 2. - Get the day before yesterday's closing stock price
-
-# TODO 3. - Find the positive difference between 1 and 2. e.g. 40 - 20 = -20, but the positive difference is 20. Hint: https://www.w3schools.com/python/ref_func_abs.asp
-
-# TODO 4. - Work out the percentage difference in price between closing price yesterday and closing price the day before yesterday.
-
-# TODO 5. - If TODO4 percentage is greater than 5 then print("Get News").
+if percentage_diff > 5:
+    print("Get News")
 
 ## STEP 2: https://newsapi.org/
 # Instead of printing ("Get News"), actually get the first 3 news pieces for the COMPANY_NAME.
